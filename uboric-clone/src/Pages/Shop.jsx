@@ -1,285 +1,132 @@
-// import {
-//   Box,
-//   Breadcrumb,
-//   BreadcrumbItem,
-//   BreadcrumbLink,
-//   Button,
-//   Divider,
-//   Flex,
-//   FormControl,
-//   Heading,
-//   Image,
-//   Input,
-//   Stack,
-//   Text,
-//   Textarea,
-//   useToast,
-// } from "@chakra-ui/react";
-// import React, { useReducer } from "react";
-// import { useDispatch } from "react-redux";
-// import { updateContactMessage } from "../Redux/ContactReducer/action";
-// import phone from "../utils/phone.png";
-// import message from "../utils/message.png";
-// import { useNavigate } from "react-router-dom";
-// import { ADD_MESSAGE_SUCCESS } from "../Redux/ContactReducer/actionTypes";
+import { ChevronRightIcon } from '@chakra-ui/icons'
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Flex, Grid, Heading, SimpleGrid, Spacer, Stack, StackDivider } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
+import {useSelector,useDispatch} from "react-redux"
+import {useSearchParams,useLocation} from "react-router-dom"
+import AllProducts from '../Components/Shop/AllProducts'
+import { Brand } from '../Components/Shop/Brand'
+import Category from '../Components/Shop/Category'
+import { Price } from '../Components/Shop/Price'
+import { getData } from '../Redux/ProductsReducer/action'
+const breakpoints = {
+  sm: 'repeat(1,1fr)',
+  md: 'repeat(2,1fr)',
+  lg: 'repeat(3,1fr)'
 
-// function reducer(state, action) {
-//   switch (action.type) {
-//     case "name":
-//       return {
-//         ...state,
-//         name: action.payload,
-//       };
-//     case "email":
-//       return {
-//         ...state,
-//         email: action.payload,
-//       };
+}
+const Shop = () => {
+    let {products}= useSelector(state=>state.ProductReducer)
+    const [searchParams] = useSearchParams()
+    const location= useLocation()
+    const dispatch= useDispatch()
+    const [update,setUpdate]= useState("false")
+    const [updateData,setUpdateData]= useState([])
+    // const [data,setData]= useState(products)
+  
+    // console.log(products)
+    // console.log(searchParams)
+    const filterPrice= async(start,end)=>{
+      dispatch(getData())
+      setUpdate("true")
+      let newData=products.filter(el=>Number(el.Price)>=Number(start) && Number(el.Price<=Number(end)))
+      setUpdateData(newData)
+      
+    }
+    
+    // console.log(updateData)
+    useEffect(()=>{
+      dispatch(getData())
+    },[update])
+    // console.log(update)
 
-//     case "phone":
-//       return {
-//         ...state,
-//         phone: action.payload,
-//       };
+  // console.log(location.search)
+    useEffect(()=>{
+      if(location || products.length==0){
+        
+          //  products=products.filter(el=>Number(el.Price)>=100 && Number(el.Price<=500))
+      //  setData(newProd)
 
-//     case "message":
-//       return {
-//         ...state,
-//         message: action.payload,
-//       };
-//     default:
-//       return state;
-//   }
-// }
 
-// const initialState = {
-//   name: "",
-//   email: "",
-//   phone: "",
-//   message: "",
-// };
+      
+    
+        // const sortBy= searchParams.getAll('sortBy')
+        const category= searchParams.getAll('category')
+        const brand= searchParams.getAll('brand')
+        const Price= searchParams.getAll('range')
+        console.log(Price)
+        console.log(brand)
+        let params={
+          category,brand,Price
+        }
+        console.log(params)
+        const queryParams={
+          params:{
+            category: category,
+            brand:brand,
+            Price:Price
+            
+          }
+        
+          
+          
+        }
+        // console.log(`params ${queryParams.pa}`)
+        dispatch(getData(queryParams))
+    }
+      
+      
+    },[location,update])
 
-// const ContactUs = () => {
-//   // const info = useSelector((state) => state.ContactReducer);
-//   const toast = useToast()
-//   const dispatch = useDispatch();
-//   const navigate = useNavigate();
-//   const [state, setMessage] = useReducer(reducer, initialState);
+// console.log(products)
 
-//   const messageHandler = () => {
-//     dispatch(updateContactMessage(state)).then((r) => {
-//       if (r === ADD_MESSAGE_SUCCESS) {
-//         toast({
-//           description: "Message sent successfully.",
-//           status: 'success',
-//           duration: 9000,
-//           isClosable: true,
-//         })
-//         navigate("/", { replace: true });
-//       }
-//     });
-//   };
+    // useEffect(()=>{
+    //   dispatch(getData())
+      
+    // },[location.search])
+    
+    
+    
+  return (
+    <>
+    <Heading ml="-550px">Shop</Heading>
+    <Container mt={5} ml="270px">
+    <Breadcrumb spacing='8px' separator={<ChevronRightIcon color='gray.500' />}>
+  <BreadcrumbItem>
+    <BreadcrumbLink href='/'>Home</BreadcrumbLink>
+  </BreadcrumbItem>
 
-//   // useEffect(() => {
-//   //     dispatch(getContactMessage())
-//   // }, [info, dispatch]);
+  <BreadcrumbItem>
+    <BreadcrumbLink href='/shop'>Shop</BreadcrumbLink>
+  </BreadcrumbItem>
+</Breadcrumb>
+    </Container>
+    
+    <Flex w="100%" gap="2rem" padding="2rem">
+      <Stack w="20%" gap={"1rem"}>
+        <Price filterPrice={filterPrice}/>
+        
+        <Brand/>
+      
+        <Category/>
+      </Stack>
+      <Grid templateColumns={breakpoints} gap={6} cursor={"pointer"} w="80%">
+ 
+        
+        { update=="true"? updateData.map(item=>(
+   console.log(update),
+        <AllProducts key={item.id} data={item}/>
+        )) : products?.map(item=>(
 
-//   // console.log(info);
+          <AllProducts key={item.id} data={item}/>
+          ))}
+         {/* { products?.map(item=>(
 
-//   return (
-//     <Box maxH="100vh" paddingBottom="300px" marginBottom="100px">
+<AllProducts key={item.id} data={item}/>
+))} */}
+      </Grid>
+    </Flex>
+    </>
+  )
+}
 
-//       <Divider orientation="horizontal" />
-//       <Box maxW="1150px" maxH="100%" position="center" margin="auto">
-//         <Flex flexDirection="column">
-//           <Box width="100%">
-//             {/* top div */}
-//             <Box padding="19px 0px" width="20%" textAlign="left">
-//               <Breadcrumb fontWeight="light" fontSize="sm">
-//                 <BreadcrumbItem>
-//                   <BreadcrumbLink href="/">Home</BreadcrumbLink>
-//                 </BreadcrumbItem>
-//                 <BreadcrumbItem>
-//                   <BreadcrumbLink href="/contact-us">Contact Us</BreadcrumbLink>
-//                 </BreadcrumbItem>
-//               </Breadcrumb>
-//             </Box>
-//             <Box width="100%" padding="42px 0px 20px">
-//               <Heading as="h3" size="lg" fontWeight="medium" textAlign="center">
-//                 Contact Us
-//               </Heading>
-//             </Box>
-//             <Divider orientation="horizontal" />
-//           </Box>
-//           <Box
-//             width="100%"
-//             maxH="100%"
-//             textAlign="left"
-//             marginTop="50px"
-//             paddingBottom="80px"
-//           >
-//             <Flex>
-//               <Box flex="1.2" maxH="100%" padding="10px">
-//                 <Flex padding="7px 0px 26px">
-//                   <Box>
-//                     <Image src={`${phone}`} alt="call us" maxW="30px" />
-//                   </Box>
-//                   <Box marginLeft="20px">
-//                     <Heading as="h4" size="md" fontWeight="semibold">
-//                       Call to Us:
-//                     </Heading>
-//                   </Box>
-//                 </Flex>
-//                 <Box padding="0px 0px 22px" textAlign="left">
-//                   <Text fontSize="md">Mon To Sat : 10:00 Am to 6:00 Pm</Text>
-//                 </Box>
-//                 <Box>
-//                   <Heading
-//                     as="h5"
-//                     size="sm"
-//                     fontWeight="semibold"
-//                     padding="0px 0px 9px"
-//                   >
-//                     Customer Service:
-//                   </Heading>
-//                 </Box>
-//                 <Box margin="16px 0px 24px" textAlign="left">
-//                   <Text fontSize="md" fontWeight="medium">
-//                     +91 97243 82162
-//                     <br />
-//                     +91 82000 99386
-//                   </Text>
-//                 </Box>
-//                 <Flex padding="7px 0px 26px">
-//                   <Box>
-//                     <Image src={`${message}`} alt="call us" maxW="30px" />
-//                   </Box>
-//                   <Box marginLeft="18px">
-//                     <Heading as="h4" size="md" fontWeight="semibold">
-//                       Write to Us:
-//                     </Heading>
-//                   </Box>
-//                 </Flex>
-//                 <Box margin="16px 0px 24px" textAlign="left">
-//                   <Text fontSize="md">
-//                     Fill out our form and we will contact you
-//                     <br /> within 24 hours.
-//                   </Text>
-//                 </Box>
-//                 <Box>
-//                   <Heading
-//                     as="h5"
-//                     size="sm"
-//                     fontWeight="semibold"
-//                     padding="0px 0px 9px"
-//                   >
-//                     Customer Service:
-//                   </Heading>
-//                 </Box>
-//                 <Box margin="16px 0px 24px" textAlign="left">
-//                   <Text fontSize="md">uboricllp@gmail.com</Text>
-//                 </Box>
-//               </Box>
-//               <Box flex="2.8">
-//                 <Stack spacing={8}>
-//                   <Box background="none" color="none">
-//                     <FormControl>
-//                       <Input
-//                         focusBorderColor="black"
-//                         errorBorderColor="red.300"
-//                         type="text"
-//                         value={state.name}
-//                         onChange={(e) =>
-//                           setMessage({ type: "name", payload: e.target.value })
-//                         }
-//                         placeholder="Your Name *"
-//                         size="lg"
-//                         _placeholder={{
-//                           color: "black.300",
-//                           fontSize: "medium",
-//                         }}
-//                         borderRadius="0px"
-//                       />
-//                     </FormControl>
-//                   </Box>
-//                   <Box>
-//                     <FormControl>
-//                       <Input
-//                         focusBorderColor="black"
-//                         errorBorderColor="red.300"
-//                         type="email"
-//                         value={state.email}
-//                         onChange={(e) =>
-//                           setMessage({ type: "email", payload: e.target.value })
-//                         }
-//                         placeholder="Your Email *"
-//                         size="lg"
-//                         _placeholder={{
-//                           color: "black.400",
-//                           fontSize: "medium",
-//                         }}
-//                         borderRadius="0px"
-//                       />
-//                     </FormControl>
-//                   </Box>
-//                   <Box>
-//                     <FormControl>
-//                       <Input
-//                         focusBorderColor="black"
-//                         errorBorderColor="red.300"
-//                         type="number"
-//                         value={state.phone}
-//                         onChange={(e) =>
-//                           setMessage({ type: "phone", payload: e.target.value })
-//                         }
-//                         placeholder="Your Phone *"
-//                         size="lg"
-//                         _placeholder={{
-//                           color: "black.400",
-//                           fontSize: "medium",
-//                         }}
-//                         borderRadius="0px"
-//                       />
-//                     </FormControl>
-//                   </Box>
-//                   <Box>
-//                     <FormControl>
-//                       <Textarea
-//                         placeholder="Message *"
-//                         height="150px"
-//                         focusBorderColor="black"
-//                         errorBorderColor="red.300"
-//                         borderRadius="0px"
-//                         type="text"
-//                         value={state.message}
-//                         onChange={(e) =>
-//                           setMessage({
-//                             type: "message",
-//                             payload: e.target.value,
-//                           })
-//                         }
-//                       />
-//                     </FormControl>
-//                   </Box>
-//                 </Stack>
-//                 <Button
-//                   onClick={messageHandler}
-//                   borderRadius="0px"
-//                   color="white"
-//                   background="#302C26"
-//                   padding="26px"
-//                   marginTop="50px"
-//                   _hover={{color:"#302C26", background:"#ffffff", border:"1px solid black"}}
-//                 >
-//                   Send Message
-//                 </Button>
-//               </Box>
-//             </Flex>
-//           </Box>
-//         </Flex>
-//       </Box>
-//     </Box>
-//   );
-// };
-
-// export default ContactUs;
+export default Shop
