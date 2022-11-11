@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getData } from "../Redux/ProductsReducer/action";
+import { getData } from "../Context/ProductsReducer/action";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -13,7 +13,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { getCartData } from "../Redux/CartReducer/action";
+import { getCartData } from "../Context/CartReducer/action";
 import axios from "axios";
 
 // import Aos from 'aos'

@@ -12,7 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import CartItem from "../Components/Cart/CartItem";
 import { useSelector,useDispatch } from "react-redux";
-import {getCartData} from "../Redux/CartReducer/action"
+import {getCartData} from "../Context/CartReducer/action"
 
 
   

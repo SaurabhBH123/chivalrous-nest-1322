@@ -17,11 +17,11 @@ import {
 } from "@chakra-ui/react";
 import React, { useReducer } from "react";
 import { useDispatch } from "react-redux";
-import { updateContactMessage } from "../Redux/ContactReducer/action";
+import { updateContactMessage } from "../Context/ContactReducer/action";
 import phone from "../utils/phone.png";
 import message from "../utils/message.png";
 import { useNavigate } from "react-router-dom";
-import { ADD_MESSAGE_SUCCESS } from "../Redux/ContactReducer/actionTypes";
+import { ADD_MESSAGE_SUCCESS } from "../Context/ContactReducer/actionTypes";
 
 function reducer(state, action) {
   switch (action.type) {

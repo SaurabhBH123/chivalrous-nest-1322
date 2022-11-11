@@ -7,7 +7,7 @@ import AllProducts from '../Components/Shop/AllProducts'
 import { Brand } from '../Components/Shop/Brand'
 import Category from '../Components/Shop/Category'
 import { Price } from '../Components/Shop/Price'
-import { getData } from '../Redux/ProductsReducer/action'
+import { getData } from '../Context/ProductsReducer/action'
 const breakpoints = {
   sm: 'repeat(1,1fr)',
   md: 'repeat(2,1fr)',

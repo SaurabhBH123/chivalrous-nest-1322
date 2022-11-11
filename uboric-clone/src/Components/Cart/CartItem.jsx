@@ -2,7 +2,7 @@ import { Box, Flex, Image } from "@chakra-ui/react";
 import { BiX } from "react-icons/bi";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCartData, getCartData, updateCartData } from "../../Redux/CartReducer/action";
+import { deleteCartData, getCartData, updateCartData } from "../../Context/CartReducer/action";
 
 
 const CartItem = ({ title, price, size, colour = "mixed", image,quantity,id ,getTotal}) => {

@@ -24,7 +24,7 @@ import SearchBar from "../Components/Checkout/SearchBar";
 import countries from "../utils/contries.json";
 import state from "../utils/states.json";
 import { useDispatch, useSelector } from "react-redux";
-import { getCartData } from "../Redux/CartReducer/action";
+import { getCartData } from "../Context/CartReducer/action";
 const Checkout = () => {
   const [show, setShow] = useState(false);
 
