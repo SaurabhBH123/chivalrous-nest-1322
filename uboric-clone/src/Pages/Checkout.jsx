@@ -25,6 +25,7 @@ import countries from "../utils/contries.json";
 import state from "../utils/states.json";
 import { useDispatch, useSelector } from "react-redux";
 import { getCartData } from "../Redux/CartReducer/action";
+import { useNavigate } from "react-router-dom";
 const Checkout = () => {
   const [show, setShow] = useState(false);
 
@@ -115,6 +116,7 @@ const Checkout = () => {
   const [email, setEmail] = useState("");
   const [textArea, setTextArea] = useState("");
   const [formData, setFormData] = useState([]);
+  const navigate = useNavigate();
   console.log(formData);
   const toast = useToast()
   const handleSubmit = () => {
@@ -132,6 +134,7 @@ const Checkout = () => {
       state: "Maharashtra",
     };
     setFormData(billingData);
+    navigate("/")
   };
   return (
     <Box>
@@ -349,7 +352,7 @@ const Checkout = () => {
                 m={"1.5rem 0"}
               >
                 <Flex
-                  justifyContent={"space-between"}
+                  justifyContent="space-between"
                   p="1rem 2rem"
                   borderBottom={"1px solid"}
                   borderColor="gray.300"
@@ -372,7 +375,7 @@ const Checkout = () => {
                             </Box>
                             <Box>Size: {item.size}</Box>
                           </Box>
-                          <Box width={"20%"}>₹{item.price}</Box>
+                          <Box width={"20%"} display="flex" alignItems="flex-end" justifyContent="end">₹{item.price}</Box>
                         </Flex>
                       </Box>
                     ))}
