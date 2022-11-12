@@ -148,6 +148,7 @@ const ProductDetails = () => {
         margin="auto" width="60%"
         cursor={"pointer"}
         height="80%"
+        objectFit="cover"
         />
 
         <Box display={"flex"}>
@@ -226,7 +227,7 @@ const ProductDetails = () => {
         padding="0.5rem"
        >
         <Button borderRadius="50%" bg={"#7d7d7d"} disabled={qty==1} onClick={()=>setQty(qty-1)}>-</Button>
-        <Flex>{qty}</Flex>
+        <Text pt={2}>{qty}</Text>
         <Button bg={"#7d7d7d"}  borderRadius="50%" disabled={qty==10} onClick={()=>setQty(qty+1)} >+</Button>
        </Box>
 

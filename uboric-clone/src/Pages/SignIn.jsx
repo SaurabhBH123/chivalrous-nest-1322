@@ -1,71 +1,144 @@
-import React from "react";
-// import { useContext } from "react";
-// import { AuthContext } from "../Context/AuthContext/AuthContextProvider";
-import {Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, FormControl,FormLabel, Link} from '@chakra-ui/react'
-import { Input,Button } from "@chakra-ui/react";
-import { useState } from "react";
-import { useEffect } from "react";
-import axios from 'axios'
-import {ChevronRightIcon} from "@chakra-ui/icons"
-
+import React, { useState } from "react";
+import {
+  Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Button,
+  Divider,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Link,
+  Stack,
+  useToast,
+} from "@chakra-ui/react";
+import {useNavigate} from 'react-router-dom'
+import { useDispatch,useSelector } from "react-redux";
+import { login } from "../Redux/AuthReducer/action";
+import { LOGIN_SUCCESS } from "../Redux/AuthReducer/actionTypes";
 
 const SignIn = () => {
-  // const [state,dispatch]= useContext(AuthContext)
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
-  
-  const getData=()=>{
-    axios.get('http://localhost:8080/users', {
-      email: {email},
-      password: {password}
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    })
-  }
 
-  useEffect(()=>{
-    getData();
-  },[])
+  const toast = useToast()
+  const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const isLoading = useSelector((state) => (state.AuthReducer.isLoading));
 
-  const handleSubmit=()=>{
-    getData()
-  }
+    const loginHandler = () => {
+      if (email && password) {
+        const params = {
+          email,
+          password,
+        };
+        dispatch(login(params)).then((res) => {
+          if (res === LOGIN_SUCCESS) {
+            console.log(res)
+              toast({
+                description: "Signed in successfully",
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+              })
+            navigate("/shop", { replace: true });
+          } else {
+            toast({
+              description: "Failed",
+              status: 'error',
+              duration: 2000,
+              isClosable: true,
+            })
+          }
+        });
+      }
+    };
+
   return (
-    <>
-    <Container>
-    <Breadcrumb spacing='8px' separator={<ChevronRightIcon color='gray.500' />}>
-  <BreadcrumbItem>
-    <BreadcrumbLink href='/'>Home</BreadcrumbLink>
-  </BreadcrumbItem>
-
-  <BreadcrumbItem>
-    <BreadcrumbLink href='/SignIn'>SignIn</BreadcrumbLink>
-  </BreadcrumbItem>
-</Breadcrumb>
-</Container>
-  <Container mb={6} mt={6}>
-    <FormControl>
-      <FormLabel>Email address</FormLabel>
-      <Input type='email' onChange={(e)=>setEmail(e.target.value)}/>
-      <FormLabel>Password</FormLabel>
-      <Input type='password' onChange={(e)=>setPassword(e.target.value)}/>
-      <Box paddingTop="50px">
+    <Box height="85vh" bg="#ffffff" padding="0px" >
+      <Divider orientation="horizontal" />
+      <Box
+        width="1150px"
+        position="center"
+        margin="auto"
+        height="100%"
+        padding="20px 0px 60px 0px"
+      >
+        <Box width="20%" textAlign="left" padding="">
+          <Breadcrumb fontWeight="light" fontSize="sm">
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/sign-in">Sign-In</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Box>
+        <Box width="100%" padding="20px 0px 50px">
+          <Heading as="h3" size="lg" fontWeight="medium" textAlign="center">
+            Welcome Back
+          </Heading>
+        </Box>
+        <Divider orientation="horizontal" />
+        <Box width="50%" margin="auto" pl="50px" pr="50px">
+          <Stack spacing={4}>
+            <Box>
+              <FormControl>
+                <FormLabel fontWeight="hairline">Email address *</FormLabel>
+                <Input
+                  focusBorderColor="black"
+                  errorBorderColor="red.300"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  size="lg"
+                  borderRadius="0px"
+                />
+              </FormControl>
+            </Box>
+            <Box>
+              <FormControl>
+                <FormLabel fontWeight="hairline">Password *</FormLabel>
+                <Input
+                  focusBorderColor="black"
+                  errorBorderColor="red.300"
+                  type="password"
+                  size="lg"
+                  borderRadius="0px"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </FormControl>
+            </Box>
+          </Stack>
+          <Box paddingTop="50px">
             Are you new here 💅?{" "}
             <Link color="teal.500" href="sign-up">
               Sign Up
             </Link>
+          </Box>
+          <Button
+            borderRadius="0px"
+            width="180px"
+            color="white"
+            background="#302C26"
+            marginTop="20px"
+            _hover={{
+              color: "#302C26",
+              background: "#ffffff",
+              border: "1px solid black",
+            }}
+            onClick={loginHandler}
+                  isLoading={isLoading}
+          >
+            Sign In
+          </Button>
+        </Box>
       </Box>
-      <Button colorScheme='teal' size='md' onClick={handleSubmit} mt={2}>
-        Login
-      </Button>
-    </FormControl>
-  </Container>
-  </>
-  )
+    </Box>
+  );
 };
 
 export default SignIn;
